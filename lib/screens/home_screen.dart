@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final supabase = Supabase.instance.client; // Получаем клиент Supabase
+final supabase = Supabase.instance.client;
 
 class MyWidget extends StatefulWidget {
   const MyWidget({Key? key}) : super(key: key);
@@ -11,7 +11,7 @@ class MyWidget extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  final _future = supabase.from('todo').select(); // Запрос к Supabase
+  final _future = supabase.from('todo').select();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _MyWidgetState extends State<MyWidget> {
             itemBuilder: (context, index) {
               final task = tasks[index];
               return ListTile(
-                title: Text(task['title'] ?? 'Без названия'),
+                title: Text(task['title']),
                 trailing: task['isDone'] == true ? const Text("✅") : const Text("❌"),
               );
             },
