@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+final supabase = Supabase.instance.client; // Подключение к Supabase
+
 class MyWidget extends StatefulWidget {
   const MyWidget({Key? key}) : super(key: key);
 
@@ -8,30 +10,29 @@ class MyWidget extends StatefulWidget {
   State<MyWidget> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
-  final SupabaseClient supabase = Supabase.instance.client;
-  List<Map<String, dynamic>> tasks = [];
-  bool isLoading = true;
+class Task {
+  final String title;
+  final bool isDone;
 
-  @override
-  void initState() {
-    super.initState();
-    fetchTasks();
+  Task({required this.title, required this.isDone});
+
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      title: json['title'] ?? 'Без названия',
+      isDone: json['isDone'] ?? false,
+    );
   }
+}
 
-  // Загрузка задач из Supabase
-  Future<void> fetchTasks() async {
+class _MyWidgetState extends State<MyWidget> {
+  Future<List<Task>> fetchTasks() async {
     try {
-      final response = await supabase.from('tasks').select();
-      setState(() {
-        tasks = List<Map<String, dynamic>>.from(response);
-        isLoading = false;
-      });
+      final response = await supabase.from('ToDo App').select('title, isDone');
+
+      return response.map<Task>((json) => Task.fromJson(json)).toList();
     } catch (e) {
-      print('Ошибка загрузки данных: $e');
-      setState(() {
-        isLoading = false;
-      });
+      print('Ошибка при загрузке задач: $e');
+      return [];
     }
   }
 
@@ -39,54 +40,32 @@ class _MyWidgetState extends State<MyWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("ToDo App with Supabase"),
+        title: const Text("ToDo App with Innoprog"),
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : tasks.isEmpty
-              ? const Center(child: Text("Нет задач"))
-              : ListView.builder(
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    final task = tasks[index];
-                    return Container(
-                      height: 100,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 16),
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                task['title'] ?? 'Без названия',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                task['description'] ?? 'Нет описания',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+      body: FutureBuilder<List<Task>>(
+        future: fetchTasks(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Ошибка: ${snapshot.error}"));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("Нет задач"));
+          }
+
+          final tasks = snapshot.data!;
+          return ListView.builder(
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              final task = tasks[index];
+              return ListTile(
+                title: Text(task.title),
+                trailing: task.isDone ? const Text("✅") : const Text("❌"),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
