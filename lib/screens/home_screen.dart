@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final supabase = Supabase.instance.client; // Подключение к Supabase
+final supabase = Supabase.instance.client; // Получаем клиент Supabase
 
 class MyWidget extends StatefulWidget {
   const MyWidget({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
       title: json['title'] ?? 'Без названия',
-      isDone: json['isDone'] ?? false,
+      isDone: (json['isDone'] as bool?) ?? false, // Обрабатываем null
     );
   }
 }
@@ -27,7 +27,12 @@ class Task {
 class _MyWidgetState extends State<MyWidget> {
   Future<List<Task>> fetchTasks() async {
     try {
-      final response = await supabase.from('ToDo App').select('title, isDone');
+      final response = await supabase.from('todo').select('title, isDone');
+
+      if (response.isEmpty) {
+        print('Список задач пуст');
+        return [];
+      }
 
       return response.map<Task>((json) => Task.fromJson(json)).toList();
     } catch (e) {
