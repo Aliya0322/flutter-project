@@ -10,36 +10,8 @@ class MyWidget extends StatefulWidget {
   State<MyWidget> createState() => _MyWidgetState();
 }
 
-class Task {
-  final String title;
-  final bool isDone;
-
-  Task({required this.title, required this.isDone});
-
-  factory Task.fromJson(Map<String, dynamic> json) {
-    return Task(
-      title: json['title'] ?? 'Без названия',
-      isDone: (json['isDone'] as bool?) ?? false, // Обрабатываем null
-    );
-  }
-}
-
 class _MyWidgetState extends State<MyWidget> {
-  Future<List<Task>> fetchTasks() async {
-    try {
-      final response = await supabase.from('todo').select('title, isDone');
-
-      if (response.isEmpty) {
-        print('Список задач пуст');
-        return [];
-      }
-
-      return response.map<Task>((json) => Task.fromJson(json)).toList();
-    } catch (e) {
-      print('Ошибка при загрузке задач: $e');
-      return [];
-    }
-  }
+  final _future = supabase.from('todo').select(); // Запрос к Supabase
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +19,8 @@ class _MyWidgetState extends State<MyWidget> {
       appBar: AppBar(
         title: const Text("ToDo App with Innoprog"),
       ),
-      body: FutureBuilder<List<Task>>(
-        future: fetchTasks(),
+      body: FutureBuilder(
+        future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -58,14 +30,14 @@ class _MyWidgetState extends State<MyWidget> {
             return const Center(child: Text("Нет задач"));
           }
 
-          final tasks = snapshot.data!;
+          final tasks = snapshot.data as List<dynamic>;
           return ListView.builder(
             itemCount: tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[index];
               return ListTile(
-                title: Text(task.title),
-                trailing: task.isDone ? const Text("✅") : const Text("❌"),
+                title: Text(task['title'] ?? 'Без названия'),
+                trailing: task['isDone'] == true ? const Text("✅") : const Text("❌"),
               );
             },
           );
