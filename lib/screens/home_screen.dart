@@ -37,7 +37,7 @@ class _MyWidgetState extends State<MyWidget> {
               final task = tasks[index];
               return ListTile(
                 title: Text(task['title']),
-                trailing: task['isDone'] == true ? const Text("✅") : const Text("❌"),
+                trailing: task['isDone'],
               );
             },
           );
