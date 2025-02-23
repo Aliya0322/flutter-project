@@ -9,7 +9,7 @@ class MyWidget extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  final _future = Supabase.instance.client.from('todo').select();
+  late Future<List<Map<String, dynamic>>> _future;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
 
@@ -17,6 +17,7 @@ class _MyWidgetState extends State<MyWidget> {
   void initState() {
     super.initState();
     _titleController = TextEditingController();
+    _future = Supabase.instance.client.from('todo').select();
   }
 
   @override
@@ -28,6 +29,9 @@ class _MyWidgetState extends State<MyWidget> {
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _future,
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Ошибка загрузки данных: ${snapshot.error}'));
+          }
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -133,6 +137,7 @@ class _MyWidgetState extends State<MyWidget> {
       print('Task added successfully!');
       setState(() {
         _titleController.clear();
+        _future = Supabase.instance.client.from('todo').select();
       });
     }
   }
@@ -146,8 +151,9 @@ class _MyWidgetState extends State<MyWidget> {
       print('Error deleting task: ${response.error!.message}');
     } else {
       print('Task deleted successfully!');
-      // Optionally, you can update the UI to reflect the change
-      setState(() {});
+      setState(() {
+        _future = Supabase.instance.client.from('todo').select();
+      });
     }
   }
 
@@ -160,8 +166,9 @@ class _MyWidgetState extends State<MyWidget> {
       print('Error toggling task done: ${response.error!.message}');
     } else {
       print('Task toggled successfully!');
-      // Optionally, you can update the UI to reflect the change
-      setState(() {});
+      setState(() {
+        _future = Supabase.instance.client.from('todo').select();
+      });
     }
   }
 
