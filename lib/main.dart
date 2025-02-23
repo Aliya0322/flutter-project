@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/home_screen.dart';
+import 'screens/home_screen.dart';
+import 'utils/theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'api/api_config.dart';
 
@@ -19,9 +20,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: AppTheme.themeData(),
       title: 'ToDo App',
       home: MyWidget(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

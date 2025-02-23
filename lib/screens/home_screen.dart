@@ -37,29 +37,36 @@ class _MyWidgetState extends State<MyWidget> {
             itemBuilder: (context, index) {
               final task = tasks[index];
               final bool isDone = task['isDone'] == 1;
-              return ListTile(
-                title: Text(
-                  task['title'],
-                  style: TextStyle(
-                    decoration: isDone ? TextDecoration.lineThrough : null,
+              return Card(
+                margin: EdgeInsets.all(8),
+                child: ListTile(
+                  title: Text(
+                    task['title'],
+                    style: TextStyle(
+                      decoration: isDone ? TextDecoration.lineThrough : null,
+                      color: isDone ? Colors.grey : Colors.black87,
+                    ),
                   ),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        _deleteTask(task['id']);
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.check),
-                      onPressed: () {
-                        _toggleTaskDone(task['id'], !isDone);
-                      },
-                    ),
-                  ],
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _deleteTask(task['id']);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          isDone ? Icons.undo : Icons.check,
+                          color: isDone ? Colors.grey : Colors.green,
+                        ),
+                        onPressed: () {
+                          _toggleTaskDone(task['id'], !isDone);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -127,7 +134,6 @@ class _MyWidgetState extends State<MyWidget> {
         .from('todo')
         .insert({'title': title, 'isDone': 0});
     if (response.error != null) {
-      // Handle error
       print('Error adding task: ${response.error!.message}');
     } else {
       print('Task added successfully!');
@@ -146,7 +152,6 @@ class _MyWidgetState extends State<MyWidget> {
       print('Error deleting task: ${response.error!.message}');
     } else {
       print('Task deleted successfully!');
-      // Optionally, you can update the UI to reflect the change
       setState(() {});
     }
   }
@@ -160,7 +165,6 @@ class _MyWidgetState extends State<MyWidget> {
       print('Error toggling task done: ${response.error!.message}');
     } else {
       print('Task toggled successfully!');
-      // Optionally, you can update the UI to reflect the change
       setState(() {});
     }
   }
