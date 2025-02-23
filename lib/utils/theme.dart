@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static ThemeData themeData(BuildContext context) {
     return ThemeData(
-      // Основной цвет темы
+      fontFamily: 'Arkhip',
       primarySwatch: Colors.indigo,
       
       // Цвет фона Scaffold
