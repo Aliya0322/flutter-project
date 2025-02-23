@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static ThemeData themeData() {
+  static ThemeData themeData(BuildContext context) {
     return ThemeData(
+      // Основной цвет темы
       primarySwatch: Colors.indigo,
+      
+      // Цвет фона Scaffold
       scaffoldBackgroundColor: Colors.grey[50],
+      
+      // Цвет фона AppBar
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.indigo,
         elevation: 0,
@@ -13,12 +18,18 @@ class AppTheme {
           fontSize: 22,
           fontWeight: FontWeight.bold,
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
       ),
+      
+      // Цвета для FloatingActionButton
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
       ),
+      
+      // Цвета для текста
       textTheme: TextTheme(
         titleLarge: TextStyle(
           color: Colors.black,
@@ -34,6 +45,8 @@ class AppTheme {
           fontSize: 14,
         ),
       ),
+      
+      // Цвета для карточек
       cardTheme: CardTheme(
         color: Colors.white,
         elevation: 4,
@@ -42,6 +55,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
+      
+      // Цвета для кнопок
       buttonTheme: ButtonThemeData(
         buttonColor: Colors.indigo,
         textTheme: ButtonTextTheme.primary,
@@ -49,6 +64,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(8),
         ),
       ),
+      
+      // Цвета для полей ввода
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
@@ -58,7 +75,13 @@ class AppTheme {
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
-      iconTheme: IconThemeData(color: Colors.indigo),
+      
+      // Цвета для иконок
+      iconTheme: IconThemeData(
+        color: Colors.indigo,
+      ),
+      
+      // Цвета для диалогов
       dialogTheme: DialogTheme(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
