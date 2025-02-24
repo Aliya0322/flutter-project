@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  static const MaterialColor customPrimarySwatch = MaterialColor(
+    0xFF6A1B9A, // Основной цвет (фиолетовый)
+    <int, Color>{
+      50: Color(0xFFF3E5F5),
+      100: Color(0xFFE1BEE7),
+      200: Color(0xFFCE93D8),
+      300: Color(0xFFBA68C8),
+      400: Color(0xFFAB47BC),
+      500: Color(0xFF9C27B0),
+      600: Color(0xFF8E24AA),
+      700: Color(0xFF7B1FA2),
+      800: Color(0xFF6A1B9A),
+      900: Color(0xFF4A148C),
+    },
+  );
+
   static ThemeData themeData() {
     return ThemeData(
       fontFamily: "Arkhip",
-      primarySwatch: Colors.indigo,
-      scaffoldBackgroundColor: Colors.grey[50],
+      primarySwatch: customPrimarySwatch,
+      scaffoldBackgroundColor: Colors.grey[100],
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.indigo,
+        backgroundColor: customPrimarySwatch,
         elevation: 0,
         titleTextStyle: TextStyle(
           color: Colors.white,
@@ -17,7 +33,7 @@ class AppTheme {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: Colors.indigo,
+        backgroundColor: customPrimarySwatch,
         foregroundColor: Colors.white,
       ),
       textTheme: TextTheme(
@@ -44,7 +60,7 @@ class AppTheme {
         ),
       ),
       buttonTheme: ButtonThemeData(
-        buttonColor: Colors.indigo,
+        buttonColor: customPrimarySwatch,
         textTheme: ButtonTextTheme.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -59,7 +75,7 @@ class AppTheme {
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
-      iconTheme: IconThemeData(color: Colors.indigo),
+      iconTheme: IconThemeData(color: customPrimarySwatch),
       dialogTheme: DialogTheme(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -69,3 +85,4 @@ class AppTheme {
     );
   }
 }
+
